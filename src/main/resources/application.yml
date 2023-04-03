@@ -1,0 +1,38 @@
+server:
+  port: 4545
+spring:
+  datasource:
+    password: ${MYSQL_USER:root}
+    url: jdbc:mysql://${MYSQL_HOST:ec2-44-212-0-152.compute-1.amazonaws.com}:${MYSQL_PORT:3306}/sys
+    username: ${MYSQL_USER:root}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+    show-sql: true
+  mvc:
+    pathmatch:
+      matching-strategy: ANT_PATH_MATCHER
+
+
+  mail:
+    host: smtp.gmail.com
+    username: tejamunakala@gmail.com
+    password: Talcrds@123
+    port: 587
+    properties:
+      mail:
+        smtp:
+          starttls:
+            enable: true
+          auth: true
+
+userapi:
+ messages: 
+  regSuccess: Registration Successfull
+  invalidCredentials: Invalid Credentials 
+  success: Success
+  account-inactive: Account is not activated
+  

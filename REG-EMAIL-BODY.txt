@@ -1,0 +1,12 @@
+Hi {NAME} ,<br/>
+<br/>
+your Registration is completed.<br/>
+<br/>
+please find your temporary password<br/>
+<br/>
+Temporary Pwd: {PASSWORD}<br/>
+<br/>
+<a href="{URL}">Click Here To Unlock Your Account</a><br/> 
+<br/>
+Thanks,<br/>
+Admin Team.<br/>

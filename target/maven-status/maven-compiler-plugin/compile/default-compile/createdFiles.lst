@@ -1,0 +1,13 @@
+com\ashokit\domain\UserRegistration.class
+com\ashokit\constatnts\EmailUtils.class
+com\ashokit\domain\Login.class
+com\ashokit\service\UserRegistrationServiceImpl.class
+com\ashokit\O1UserRegistrationApi1Application.class
+com\ashokit\swagger\SwaggerConfig.class
+com\ashokit\domain\ActivateAccount.class
+com\ashokit\constatnts\UserRegConstants.class
+com\ashokit\controller\UserRegistrationController.class
+com\ashokit\appproperties\UserRegAppProperties.class
+com\ashokit\repo\UserRegistrationRepository.class
+com\ashokit\service\UserRegistrationService.class
+com\ashokit\domain\User.class

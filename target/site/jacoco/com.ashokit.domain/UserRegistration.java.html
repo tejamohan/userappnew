@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserRegistration.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">O1_USER_REGISTRATION_API-1</a> &gt; <a href="index.source.html" class="el_package">com.ashokit.domain</a> &gt; <span class="el_source">UserRegistration.java</span></div><h1>UserRegistration.java</h1><pre class="source lang-java linenums">package com.ashokit.domain;
+
+import java.time.LocalDate;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
+
+import lombok.Data;
+
+<span class="pc bpc" id="L16" title="75 of 102 branches missed.">@Data</span>
+@Entity
+public class UserRegistration {
+	
+@Id
+@GeneratedValue(strategy = GenerationType.IDENTITY)
+@Column(name = &quot;USER_REG_ID&quot;)
+<span class="fc" id="L23">private Long userRegId;</span>
+
+@Column(name = &quot;NAME&quot;)
+<span class="fc" id="L26">private String name;</span>
+
+@Column(name=&quot;EMAIL_ID&quot;)
+<span class="fc" id="L29">private String email;</span>
+
+@Column(name=&quot;MOBILE_NUMBER&quot;)
+<span class="fc" id="L32">private Long mobileNumber;</span>
+
+@Column(name = &quot;DATE_OF_BIRTH&quot;)
+<span class="fc" id="L35">private LocalDate dob;</span>
+
+@Column(name = &quot;SSN_ID&quot;)
+<span class="fc" id="L38">private Integer ssnNo;</span>
+
+@Column(name = &quot;PASSWORD&quot;)
+<span class="fc" id="L41">private String password;</span>
+
+@Column(name = &quot;ACTIVE_SW&quot;)
+<span class="fc" id="L44">private String activeSw;</span>
+
+@Column(name=&quot;CREATED_BY&quot;)
+<span class="fc" id="L47">private String createdBy;</span>
+
+
+@Column(name = &quot;UPDATED_BY&quot;)
+<span class="fc" id="L51">private String udatedBy;</span>
+
+
+@Column(name = &quot;CREATED_DATE&quot;,updatable = false)
+@CreationTimestamp
+<span class="fc" id="L56">private LocalDate createdDate;</span>
+
+
+
+@Column(name = &quot;UPDATED_DATE&quot;,insertable = false)
+@UpdateTimestamp
+<span class="fc" id="L62">private LocalDate updatedDate;</span>
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>

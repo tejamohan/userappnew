@@ -1,0 +1,12 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+O1_USER_REGISTRATION_API-1,com.ashokit.domain,ActivateAccount,192,20,38,0,1,4,26,6,7,6
+O1_USER_REGISTRATION_API-1,com.ashokit.domain,Login,109,17,22,0,0,3,15,5,4,5
+O1_USER_REGISTRATION_API-1,com.ashokit.domain,UserRegistration,327,229,75,27,0,13,53,27,2,27
+O1_USER_REGISTRATION_API-1,com.ashokit.domain,User,232,23,46,0,5,1,32,6,9,6
+O1_USER_REGISTRATION_API-1,com.ashokit.swagger,SwaggerConfig,0,15,0,0,0,6,0,2,0,2
+O1_USER_REGISTRATION_API-1,com.ashokit.controller,UserRegistrationController,136,9,6,0,26,4,11,1,8,1
+O1_USER_REGISTRATION_API-1,com.ashokit,O1UserRegistrationApi1Application,5,3,0,0,2,1,1,1,1,1
+O1_USER_REGISTRATION_API-1,com.ashokit.constatnts,EmailUtils,32,9,0,0,10,4,1,1,1,1
+O1_USER_REGISTRATION_API-1,com.ashokit.constatnts,UserRegConstants,0,3,0,0,0,1,0,1,0,1
+O1_USER_REGISTRATION_API-1,com.ashokit.appproperties,UserRegAppProperties,55,33,13,1,0,2,10,4,3,4
+O1_USER_REGISTRATION_API-1,com.ashokit.service,UserRegistrationServiceImpl,189,192,6,12,42,52,7,13,3,8

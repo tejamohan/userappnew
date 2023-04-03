@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>UserRegistrationServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">O1_USER_REGISTRATION_API-1</a> &gt; <a href="index.source.html" class="el_package">com.ashokit.service</a> &gt; <span class="el_source">UserRegistrationServiceImpl.java</span></div><h1>UserRegistrationServiceImpl.java</h1><pre class="source lang-java linenums">package com.ashokit.service;
+
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+
+
+
+import org.passay.CharacterRule;
+import org.passay.EnglishCharacterData;
+import org.passay.PasswordGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.data.domain.Example;
+
+import org.springframework.stereotype.Service;
+
+import com.ashokit.appproperties.UserRegAppProperties;
+import com.ashokit.constatnts.EmailUtils;
+import com.ashokit.constatnts.UserRegConstants;
+import com.ashokit.domain.ActivateAccount;
+import com.ashokit.domain.Login;
+import com.ashokit.domain.User;
+import com.ashokit.domain.UserRegistration;
+import com.ashokit.repo.UserRegistrationRepository;
+
+
+
+
+@Service
+public class UserRegistrationServiceImpl implements UserRegistrationService{
+	
+<span class="fc" id="L40">	Logger logger=LoggerFactory.getLogger(UserRegistrationServiceImpl.class);</span>
+	
+
+	private EmailUtils emailUtils;
+	
+
+	private UserRegistrationRepository repository;
+	
+
+	
+<span class="fc" id="L50">	private Map&lt;String,String&gt; messages =new HashMap&lt;&gt;();</span>
+
+
+
+
+
+	public UserRegistrationServiceImpl(EmailUtils emailUtils, UserRegistrationRepository repository,
+			UserRegAppProperties appProps) {
+<span class="fc" id="L58">		super();</span>
+<span class="fc" id="L59">		this.emailUtils = emailUtils;</span>
+<span class="fc" id="L60">		this.repository = repository;</span>
+<span class="fc" id="L61">		this.messages = appProps.getMessages();	</span>
+<span class="fc" id="L62">	}</span>
+
+	@Override
+	public boolean save(User user) {
+<span class="nc" id="L66">		UserRegistration entity=new UserRegistration();</span>
+<span class="nc" id="L67">		BeanUtils.copyProperties(user, entity);</span>
+<span class="nc" id="L68">		entity.setPassword(generateRandomPassword());</span>
+<span class="nc" id="L69">		entity.setActiveSw(UserRegConstants.IN_ACTIVE);</span>
+		
+<span class="nc" id="L71">		entity=repository.save(entity);</span>
+<span class="nc" id="L72">		String msg=messages.get(UserRegConstants.REG_SUCCESS);</span>
+		try {
+<span class="nc" id="L74">		String body=getBody(entity.getName(), entity.getPassword());</span>
+<span class="nc" id="L75">		emailUtils.sendMessageWithAttachment(entity.getEmail(), msg, body);</span>
+<span class="nc" id="L76">		}catch(Exception e) {</span>
+<span class="nc" id="L77">			logger.error(&quot;Exception Occured&quot;,e);</span>
+<span class="nc" id="L78">		}</span>
+		
+		
+<span class="nc" id="L81">		return true;</span>
+	}
+	
+	
+
+	@Override
+	public boolean activatedAccount(ActivateAccount activateAccount) {
+<span class="fc" id="L88">	UserRegistration entity=new UserRegistration();</span>
+<span class="fc" id="L89">	entity.setEmail(activateAccount.getRegistrationMail());</span>
+<span class="fc" id="L90">	entity.setPassword(activateAccount.getTemporaryPassword());</span>
+	
+<span class="fc" id="L92">    Example&lt;UserRegistration&gt; add=Example.of(entity);</span>
+<span class="fc" id="L93">          List&lt;UserRegistration&gt; getAll=repository.findAll(add);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">          if(getAll==null) {</span>
+<span class="fc" id="L95">        	  return false;</span>
+          }else {
+<span class="fc" id="L97">        	  UserRegistration reg=getAll.get(0);</span>
+<span class="fc" id="L98">        	  reg.setPassword(activateAccount.getNewPassword());</span>
+<span class="fc" id="L99">        	  reg.setActiveSw(UserRegConstants.ACTIVE);</span>
+<span class="fc" id="L100">        	  repository.save(reg);</span>
+<span class="fc" id="L101">        	  return true;</span>
+          }
+	  
+	
+		
+		
+	     
+		
+	}
+
+	@Override
+	public List&lt;User&gt; getAllUsers() {
+		
+<span class="fc" id="L114">		List&lt;UserRegistration&gt; getAll=repository.findAll();</span>
+<span class="fc" id="L115">		List&lt;User&gt; getUsersList=new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L116" title="All 2 branches covered.">		for(UserRegistration entity:getAll) {</span>
+<span class="fc" id="L117">			User user= new User();</span>
+<span class="fc" id="L118">			BeanUtils.copyProperties(entity, user);</span>
+<span class="fc" id="L119">			getUsersList.add(user);</span>
+<span class="fc" id="L120">		}</span>
+
+<span class="fc" id="L122">		return getUsersList;</span>
+	}
+
+
+
+	@Override
+	public boolean deleteUser(Long uid) {
+<span class="fc" id="L129">	  repository.deleteById(uid);</span>
+<span class="fc" id="L130">		return true;</span>
+	}
+
+	@Override
+	public boolean changeAccountStatus(Long uid, String status) {
+<span class="fc" id="L135">		Optional&lt;UserRegistration&gt; getUser= repository.findById(uid);</span>
+	
+<span class="fc bfc" id="L137" title="All 2 branches covered.">		if(getUser.isPresent()) {</span>
+<span class="fc" id="L138">			UserRegistration registartion=getUser.get();</span>
+<span class="fc" id="L139">			registartion.setActiveSw(status);</span>
+<span class="fc" id="L140">			repository.save(registartion);</span>
+<span class="fc" id="L141">			return true;</span>
+		}else {
+<span class="fc" id="L143">		return false;</span>
+		}
+	}
+
+	@Override
+	public String login(Login login) {
+	
+<span class="fc" id="L150">	       UserRegistration entity=repository.findByEmailAndPassword(login.getEmailId(), login.getPassword());</span>
+	
+<span class="fc bfc" id="L152" title="All 2 branches covered.">	       if(entity==null) {</span>
+<span class="fc" id="L153">	    	   return messages.get(UserRegConstants.INVALID_CREDENTIALS);</span>
+	       }else {
+<span class="fc bfc" id="L155" title="All 2 branches covered.">	    	   if(entity.getActiveSw().equals(UserRegConstants.ACTIVE)) {</span>
+<span class="fc" id="L156">	    		   return messages.get(UserRegConstants.SUCCESS);</span>
+	    	   }else {
+<span class="fc" id="L158">	    		   return messages.get(UserRegConstants.INACTIVE_ACCOUNT);</span>
+	    	   }
+	    	
+	       }
+	       
+	       
+
+	}
+
+	@Override
+	public User getUserById(Long uid) {
+<span class="fc" id="L169">		Optional&lt;UserRegistration&gt; getUser= repository.findById(uid);</span>
+<span class="fc" id="L170">		User user=new User();</span>
+<span class="pc bpc" id="L171" title="1 of 2 branches missed.">		if(getUser.isPresent()) {</span>
+<span class="fc" id="L172">		UserRegistration registration=getUser.get();</span>
+<span class="fc" id="L173">			BeanUtils.copyProperties(registration, user);</span>
+		}
+		
+	     
+<span class="fc" id="L177">		return user;</span>
+	}
+
+
+
+	@Override
+	public String forgetPwd(String email) {
+		
+<span class="fc" id="L185">		UserRegistration entity=repository.findByEmail(email);</span>
+<span class="fc" id="L186">		boolean email1=false;</span>
+<span class="pc bpc" id="L187" title="1 of 2 branches missed.">		if(entity==null) {</span>
+<span class="fc" id="L188">			return UserRegConstants.INVALID_CREDENTIALS;</span>
+		}else {
+<span class="nc" id="L190">			String subject=&quot;Forget PassWord&quot;;</span>
+			try {
+				
+<span class="nc" id="L193">				String body=getBody(entity.getName(), entity.getPassword());</span>
+<span class="nc" id="L194">				 email1=emailUtils.sendMessageWithAttachment(entity.getEmail(), subject, body);</span>
+<span class="nc bnc" id="L195" title="All 2 branches missed.">			     if(email1) {</span>
+<span class="nc" id="L196">			    	 return &quot;Password sent your registered email&quot;;</span>
+			     }
+<span class="nc" id="L198">			} catch (Exception e) {</span>
+			
+<span class="nc" id="L200">				logger.error(&quot;Exception occured&quot;,e);</span>
+<span class="nc" id="L201">			}</span>
+		}
+<span class="nc" id="L203">		return null;</span>
+	
+		
+	
+		
+	}
+	
+	
+	private String generateRandomPassword() {
+
+<span class="nc" id="L213">		List rules = Arrays.asList(new CharacterRule(EnglishCharacterData.UpperCase, 1),</span>
+				new CharacterRule(EnglishCharacterData.LowerCase, 1), new CharacterRule(EnglishCharacterData.Digit, 1),new CharacterRule(EnglishCharacterData.Special, 1));
+
+<span class="nc" id="L216">		PasswordGenerator generator = new PasswordGenerator();</span>
+		
+<span class="nc" id="L218">		return generator.generatePassword(8, rules);</span>
+	}
+	
+	private String getBody(String fullname,String tempPwd)  {
+<span class="nc" id="L222">		String filename=UserRegConstants.FILENAME;</span>
+<span class="nc" id="L223">		String url=&quot;&quot;;</span>
+<span class="nc" id="L224">		String mailBody=null;</span>
+<span class="nc" id="L225">		try (FileReader fileReader=new FileReader(filename);</span>
+<span class="nc" id="L226">				BufferedReader bufferedReader=new BufferedReader(fileReader)){</span>
+		
+		
+		
+<span class="nc" id="L230">		StringBuilder buffer=new StringBuilder();</span>
+		
+<span class="nc" id="L232">		String line=bufferedReader.readLine();</span>
+<span class="nc bnc" id="L233" title="All 2 branches missed.">		while(line!=null) {		</span>
+<span class="nc" id="L234">			buffer.append(line);</span>
+<span class="nc" id="L235">			line=bufferedReader.readLine();</span>
+			
+		}
+
+<span class="nc" id="L239">		mailBody=buffer.toString();</span>
+<span class="nc" id="L240">		mailBody=mailBody.replace(UserRegConstants.NAME, fullname);</span>
+<span class="nc" id="L241">		mailBody=mailBody.replace(UserRegConstants.PASWORD, tempPwd);</span>
+<span class="nc" id="L242">		mailBody=mailBody.replace(UserRegConstants.URL, url);</span>
+		
+		    
+<span class="nc" id="L245">		}catch(Exception e) {</span>
+<span class="nc" id="L246">			logger.error(&quot;Exception Occured&quot;,e);</span>
+<span class="nc" id="L247">		}</span>
+		
+<span class="nc" id="L249">		return mailBody;</span>
+		
+	}
+	
+	}
+
+
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.2.201808211720</span></div></body></html>
