@@ -1,0 +1,19 @@
+version: "3"
+services: 
+  application: 
+    image: sb-mysql-app
+    networks: 
+      - springboot-db-net
+    ports: 
+      - "4545:4545"
+    depends_on: 
+      - ec2-44-212-0-152.compute-1.amazonaws.com
+  ec2-44-212-0-152.compute-1.amazonaws.com:
+    image: mysql
+    networks:
+      - springboot-db-net
+    environment:
+      - MYSQL_ROOT_PASSWORD: root
+      - MYSQL_DATABASE: sys
+networks: 
+  - springboot-db-net: 
